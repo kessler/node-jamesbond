@@ -2,16 +2,19 @@
   "name": "jamesbond",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",  
+  "main": "index.js",
   "scripts": {
     "test": "mocha -R spec"
   },
-  "dependencies": {},
-    
-   
-    "author": "Yaniv Kessler", 
-  
-  
+  "dependencies": {
+    "jamesbond-hookwebapp": "0.0.3",
+    "level-sublevel": "^6.3.15",
+    "levelup": "^0.19.0",
+    "locket": "0.0.2",
+    "rc": "^0.5.3",
+    "yalla": "0.0.3"
+  },
+  "author": "Yaniv Kessler",
   "bugs": {
     "url": "https://github.com/kessler/jamesbond/issues"
   },
@@ -20,6 +23,5 @@
     "url": "https://github.com/kessler/jamesbond"
   },
   "homepage": "https://github.com/kessler/jamesbond",
-    
   "license": "MIT"
 }
