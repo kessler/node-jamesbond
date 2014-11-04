@@ -1,28 +1,36 @@
 var prompt = require('prompt')
+var util = require('util')
+var async = require('async')
+
+var git = require('./lib/git')
 var argv = require('./lib/argv')
 var log = require('./lib/log')
 var db = require('./lib/db')
 
-if (argv.commands.add) {
-	addApp()		
-} else if (argv.commands.get) {
+if (argv.$.command === 'add') {
+	addApp(defaultCallback)		
+} else if (argv.$.command === 'get') {
 	getApp()
-} else if (argv.commands.list) {
+} else if (argv.$.command === 'list') {
 	listApps()
-} else if (argv.commands.delete) {
+} else if (argv.$.command === 'delete') {
 	deleteApp()
+} else if (argv.$.command === 'deploy') {
+	deployApp()
 } else {
 	log.error('invalid or missing command...')
 }
 
-function addApp() {
+function addApp(cb) {
 	
 	var app = { 
-		name: argv.name || argv.commands.add[0],
+		name: argv.name || argv.$.args[0],
 		gitRemoteUrl: argv.gitRemoteUrl,
 		paths: argv.paths,
 		branch: argv.branch,
-		secret: argv.secret
+		secret: argv.secret,
+		// TODO: need to expose this to the user with defaults
+		events: ['push']
 	}
 	
 	var prompts = []
@@ -47,20 +55,16 @@ function addApp() {
 
 			log.info(JSON.stringify(app))
 
-			addAppImpl(app)
+			db.addApp(app, cb)
 		})
 	} else {
 		log.info(JSON.stringify(app))
-		addAppImpl(app)
+		db.addApp(app, cb)
 	}
 }
 
-function addAppImpl(app) {
-	db.addApp(app, defaultCallback)
-}
-
 function getApp() {
-	db.getApp(argv.commands.get[0], function (err, app) {
+	db.getApp(argv.$.args[0], function (err, app) {
 		if (err) return log.error(err)
 
 		console.log(app)
@@ -76,7 +80,7 @@ function listApps() {
 }
 
 function deleteApp() {
-	db.deleteApp(argv.commands.delete[0], defaultCallback)
+	db.deleteApp(argv.$.args[0], defaultCallback)
 }
 
 function defaultCallback(err) {
@@ -85,9 +89,25 @@ function defaultCallback(err) {
 }
 
 function deployApp() {
-	db.getApp(argv.commands.get[0], function (err, app) {
-		if (err) return log.error(err)
+	db.getApp(argv.$.args[0], function (err, app) {
+		if (err) {
+			return addApp(deployApp)
+		}
 
-		console.log(app)
+		var work = []
+		for (var i = 0; i < app.paths.length; i++) {
+			work.push(deployFunctor(app.gitRemoteUrl, app.paths[i]))
+		}
+
+		async.parallel(work, function(err, results) {
+			console.log(err, results)
+		})
 	})		
+}
+
+function deployFunctor(gitUrl, appPath) {
+	// TODO: maybe I can clone the remote to a local path once and then clone the rest from it ?
+	return function (callback) {
+		git.clone(appPath, gitUrl, callback)
+	}
 }

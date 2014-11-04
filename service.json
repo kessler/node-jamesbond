@@ -1,0 +1,83 @@
+{
+  "jamesbond-hookwebapp": {
+    "description": "A connect web application used in [jamesbond](https://github.com/kessler/node-jamesbond) to accept github webhook calls",
+    "scripts": {
+      "test": "mocha -R spec"
+    },
+    "env": {},
+    "args": {}
+  },
+  "level-sublevel": {
+    "description": "partition levelup databases",
+    "scripts": {
+      "test": "set -e; for t in test/*.js; do node $t; done"
+    },
+    "env": {},
+    "args": {}
+  },
+  "levelup": {
+    "description": "Fast & simple storage - a Node.js-style LevelDB wrapper",
+    "scripts": {
+      "test": "tap test/*-test.js --stderr",
+      "functionaltests": "node ./test/functional/fstream-test.js && node ./test/functional/binary-data-test.js && node ./test/functional/compat-test.js",
+      "alltests": "npm test && npm run-script functionaltests"
+    },
+    "env": {},
+    "args": {}
+  },
+  "locket": {
+    "description": "A pure-JavaScript LevelDB implementation backed by a durable and persistent evented I/O b-tree for use with LevelUP.",
+    "scripts": {
+      "test": "proof platform win32 && proof test */*/*.t.js || t/test"
+    },
+    "env": {},
+    "args": {}
+  },
+  "minimist": {
+    "description": "parse argument options",
+    "scripts": {
+      "test": "tap test/*.js",
+      "coverage": "covert test/*.js"
+    },
+    "env": {},
+    "args": {}
+  },
+  "nodegit": {
+    "description": "Node.js libgit2 asynchronous native bindings",
+    "scripts": {
+      "lint": "jshint src",
+      "install": "node install.js",
+      "test": "cd test && nodeunit nodegit.js",
+      "codegen": "node build/codegen/generate.js",
+      "publish": "node-pre-gyp package && node-pre-gyp publish"
+    },
+    "env": {},
+    "args": {}
+  },
+  "prompt": {
+    "description": "A beautiful command-line prompt for node.js",
+    "scripts": {
+      "test": "vows test/prompt-test.js --spec",
+      "test-all": "vows --spec"
+    },
+    "env": {},
+    "args": {}
+  },
+  "rc": {
+    "description": "hardwired configuration loader",
+    "scripts": {
+      "rc": "./index.js",
+      "test": "set -e; node test/test.js; node test/ini.js; node test/nested-env-vars.js"
+    },
+    "env": {},
+    "args": {}
+  },
+  "yalla": {
+    "description": "A minimalistic logging lib",
+    "scripts": {
+      "test": "mocha -R spec"
+    },
+    "env": {},
+    "args": {}
+  }
+}
