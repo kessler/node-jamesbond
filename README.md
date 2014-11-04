@@ -45,9 +45,9 @@ $ jamesbond delete [name]
 delete an app from the database
 
 ### TODO: 
-automatically create webhook in github if we have permissions when adding an application
-add support for specifying multiple events from cli prompt
-add support for specifying multiple path from cli prompt
-document parameters
-enhance and document programmatic usage
-implement an [axon](https://github.com/tj/axon) based agent
+* automatically create webhook in github if we have permissions when adding an application
+* add support for specifying multiple events from cli prompt
+* add support for specifying multiple path from cli prompt
+* document parameters
+* enhance and document programmatic usage
+* implement an [axon](https://github.com/tj/axon) based agent
