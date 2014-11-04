@@ -1,4 +1,4 @@
-# JamesBond 
+# JamesBond (WIP)
 ![logo](media/logo.png)
 
 A set if tools to manage deployment from github. Currently works only on local file system, but an [axon](https://github.com/tj/axon) based agent is also planned
