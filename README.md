@@ -1,6 +1,6 @@
 # JamesBond (WIP)
 ![logo](media/logo.png)
-## 007 cat to the rescue
+## Cat 007 to the rescue
 A tool to manage deployments from github.
 With this tool you can:
 * automatically pull code from a predefined branch using webhooks. 
