@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+//TODO this entire code needs refactoring, too much hacky development on the go stuff here
+
 var prompt = require('prompt')
 var util = require('util')
 var async = require('async')
@@ -10,28 +12,74 @@ var log = require('./lib/log')
 var db = require('./lib/db')
 var deployApp = require('./lib/deployApp')
 
-if (argv.$.command === 'add') {
-	add(defaultCallback)		
-} else if (argv.$.command === 'update') {
-	update()
-} else if (argv.$.command === 'get') {
-	get()
-} else if (argv.$.command === 'list') {
-	list()
-} else if (argv.$.command === 'delete') {
-	deleteApp()
-} else if (argv.$.command === 'deploy') {
-	deploy()
+if (argv.$.command === 'app') {
+	app()
 } else if (argv.$.command === 'service') {
 	service()
 } else {
 	log.error('invalid or missing command...')
 }
 
-function add(cb) {
+function app() {
+	switch (argv.$.args[0]) {
+		case 'add':
+			addApp(defaultCallback)
+			break
+		case 'update':
+			updateApp()
+			break
+		case 'get':
+			getApp()
+			break
+		case 'list':
+			listApps()
+			break
+		case 'delete':
+			deleteApp()
+			break
+		case 'deploy':
+			deployApp()
+			break
+		default:
+			log.error('invalid app command')
+			break
+	}
+}
+
+function service() {
+	switch (argv.$.args[0]) {
+		case 'install':
+			log.info('db file is at: %s', config.db)
+			ndm.install()
+			break
+
+		case 'uninstall':
+			ndm.remove()
+			break
+
+		case 'start':
+			log.info('db file is at: %s', config.db)
+			ndm.start()
+			break
+
+		case 'restart':
+			ndm.restart()
+			break
+
+		case 'stop':
+			ndm.stop()
+			break	
+		
+		default:
+			log.error('unknown service command, try: install, uninstall, start, restart, stop')
+			break
+	}
+}
+
+function addApp(cb) {
 	
 	var app = { 
-		name: argv.name || argv.$.args[0],
+		name: argv.name || argv.$.args[1],
 		gitRemoteUrl: argv.gitRemoteUrl,
 		paths: argv.paths,
 		branch: argv.branch,
@@ -70,18 +118,18 @@ function add(cb) {
 	}
 }
 
-function update() {
-	db.getApp(argv.$.args[0], function (err, app) {
+function updateApp() {
+	db.getApp(argv.$.args[1], function (err, app) {
 		if (err) return log.error(err)
 
 		prompt.start()
 		prompt.message = ''
 		prompt.delimiter = ''
 
-		var field = argv.$.args[1]
+		var field = argv.$.args[2]
 
-		prompt.get(field + ':', function(err, result) {
-			app[field] = result[argv.$.args[1]]
+		prompt.getApp(field + ':', function(err, result) {
+			app[field] = result[argv.$.args[2]]
 
 			if (field === 'paths') {
 				app[field] = app[field].split(',')
@@ -92,8 +140,8 @@ function update() {
 	})
 }
 
-function get() {
-	db.getApp(argv.$.args[0], function (err, app) {
+function getApp() {
+	db.getApp(argv.$.args[1], function (err, app) {
 		if (err) return log.error(err)
 
 		// intentionally console.log
@@ -101,7 +149,7 @@ function get() {
 	})		
 }
 
-function list() {
+function listApps() {
 	db.listApps(function (err, apps) {
 		if (err) return log.error(err)
 
@@ -111,40 +159,20 @@ function list() {
 }
 
 function deleteApp() {
-	db.deleteApp(argv.$.args[0], defaultCallback)
+	db.deleteApp(argv.$.args[1], defaultCallback)
 }
 
-function defaultCallback(err) {
-	if (err) return log.error(err)			
-	log.info('great success!')		
-}
-
-function deploy() {
-	db.getApp(argv.$.args[0], function (err, app) {
+function deployApp() {
+	db.getApp(argv.$.args[1], function (err, app) {
 		if (err) {
-			return add(deploy)
+			return addApp(deploy)
 		}
 
 		deployApp(app, defaultCallback)
 	})		
 }
 
-function service() {
-	switch (argv.$.args[0]) {
-		case 'install':
-			ndm.install();
-			break;
-		case 'uninstall':
-			ndm.remove();
-			break;
-		case 'start':
-			ndm.start();
-			break;
-		case 'restart':
-			ndm.restart();
-			break;
-		case 'stop':
-			ndm.stop();
-			break;	
-	}
+function defaultCallback(err) {
+	if (err) return log.error(err)			
+	log.info('great success!')		
 }
