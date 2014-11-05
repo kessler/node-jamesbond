@@ -1,11 +1,11 @@
 {
   "name": "jamesbond",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "index.js",
   "bin": {
     "jamesbond": "cli.js"
-    },
+  },
   "scripts": {
     "test": "mocha -R spec",
     "start": "node ./hookserver.js"
