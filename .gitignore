@@ -1,6 +1,6 @@
 # Logs
-logs/*
-*.log
+#logs/*
+#*.log
 
 # Runtime data
 pids
@@ -24,5 +24,3 @@ node_modules
 
 # rc config files
 .*rc
-
-node_modules
