@@ -3,8 +3,12 @@
   "version": "0.0.2",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "jamesbond": "cli.js"
+    },
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha -R spec",
+    "start": "node ./hookserver.js"
   },
   "dependencies": {
     "async": "^0.9.0",
