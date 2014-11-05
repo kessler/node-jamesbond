@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var http = require('http')
 var async = require('async')
 var listener = require('./lib/FSBroadcastListener')

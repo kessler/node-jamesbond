@@ -1,6 +1,9 @@
+#!/usr/bin/env node
+
 var prompt = require('prompt')
 var util = require('util')
 var async = require('async')
+var ndm = require('ndm')('jamesbond')
 
 var argv = require('./lib/argv')
 var log = require('./lib/log')
@@ -19,6 +22,8 @@ if (argv.$.command === 'add') {
 	deleteApp()
 } else if (argv.$.command === 'deploy') {
 	deploy()
+} else if (argv.$.command === 'service') {
+	service()
 } else {
 	log.error('invalid or missing command...')
 }
@@ -122,4 +127,24 @@ function deploy() {
 
 		deployApp(app, defaultCallback)
 	})		
+}
+
+function service() {
+	switch (argv.$.args[0]) {
+		case 'install':
+			ndm.install();
+			break;
+		case 'uninstall':
+			ndm.remove();
+			break;
+		case 'start':
+			ndm.start();
+			break;
+		case 'restart':
+			ndm.restart();
+			break;
+		case 'stop':
+			ndm.stop();
+			break;	
+	}
 }

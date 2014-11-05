@@ -13,9 +13,9 @@ Also usable as a standalone web application, see [jamesbond-hookwebapp](https://
 
 ## Command line tool
 
-#### install service
+#### service related
 ```
-$ jamesbond install service
+$ jamesbond service install / uninstall / start / stop / restart / 
 ```
 Installs a web server that listens to github hook events.
 #### deploy
