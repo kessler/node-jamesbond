@@ -38,7 +38,7 @@ function app() {
 			deleteApp()
 			break
 		case 'deploy':
-			deployApp()
+			deploy()
 			break
 		default:
 			log.error('invalid app command')
@@ -80,7 +80,6 @@ function addApp(cb) {
 	
 	var app = { 
 		name: argv.name || argv.$.args[1],
-		gitRemoteUrl: argv.gitRemoteUrl,
 		paths: argv.paths,
 		branch: argv.branch,
 		secret: argv.secret,
@@ -103,10 +102,8 @@ function addApp(cb) {
 		prompt.colors = false
 
 		prompt.addProperties(app, prompts, function(err, result) {
-	
-			if (app.gitRemoteUrl.indexOf('http') !== 0 || app.gitRemoteUrl.indexOf('git://') !== 0) {
-				app.gitRemoteUrl = 'https://github.com/' + app.gitRemoteUrl
-			}
+			app.gitRemoteUrl = 'https://github.com/' + app.name
+			
 			app.paths = app.paths.split(',')
 			log.info(JSON.stringify(app))
 
@@ -119,6 +116,13 @@ function addApp(cb) {
 }
 
 function updateApp() {
+
+	var field = argv.$.args[2]
+
+	if (field === 'branch' || field === 'gitRemoteUrl') {
+		return log.error('field %s is ready only', field)
+	}
+
 	db.getApp(argv.$.args[1], function (err, app) {
 		if (err) return log.error(err)
 
@@ -126,10 +130,8 @@ function updateApp() {
 		prompt.message = ''
 		prompt.delimiter = ''
 
-		var field = argv.$.args[2]
-
 		prompt.getApp(field + ':', function(err, result) {
-			app[field] = result[argv.$.args[2]]
+			app[field] = result[field]
 
 			if (field === 'paths') {
 				app[field] = app[field].split(',')
@@ -162,10 +164,10 @@ function deleteApp() {
 	db.deleteApp(argv.$.args[1], defaultCallback)
 }
 
-function deployApp() {
+function deploy() {
 	db.getApp(argv.$.args[1], function (err, app) {
 		if (err) {
-			return addApp(deploy)
+			return addApp(deployApp)
 		}
 
 		deployApp(app, defaultCallback)
