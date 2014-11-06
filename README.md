@@ -30,7 +30,7 @@ $ jamesbond service install && jamesbond service start
 ```
 $ jamesbond service install / uninstall / start / stop / restart / 
 ```
-Installs a web server that listens to github hook events.
+Installs jamesbond service to listens for github hook events.
 ### app
 #### deploy
 ```
