@@ -21,7 +21,7 @@
     "ndm": "^3.6.3",
     "prompt": "^0.2.14",
     "rc": "^0.5.3",
-    "yalla": "0.0.3"
+    "yalla": "^0.1.0"
   },
   "author": "Yaniv Kessler",
   "bugs": {

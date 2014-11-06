@@ -1,4 +1,4 @@
-# JamesBond (WIP)
+# JamesBond
 ![logo](media/logo.png)
 ## Cat 007 to the rescue
 A tool to manage deployments from github.
@@ -6,18 +6,23 @@ With this tool you can:
 * automatically pull code from a predefined branch using webhooks. 
 * stage initial deploy on a machine
 * update several paths at the same time
-It was developed mostly for light production and development, not as a replacement for heavier deployment tools.
+
+This tool was developed for light/simple production or development environments, not as a replacement for heavier deployment tools.
+
 ## Getting started
 ```
 $ npm install -g jamesbond
 ```
 Then to initially deploy do
 ```
-$ jamesbond app deploy githubUser/myRepositoryName
+$ jamesbond app deploy githubUser/myRepositoryName#branch
 ```
-## Hook events server
-A web server that listens to hook events sent from github. Repository secret, remote url and branch can we added through the cli
-Also usable as a standalone web application, see [jamesbond-hookwebapp](https://github.com/kessler/node-jamesbond-hookwebapp)
+this action will add an entry in the database, clone the repository (it will ask you where to) and run npm install
+
+Now install and start the hook service:
+```
+$ jamesbond service install && jamesbond service start
+```
 
 ## Command line tool
 
@@ -29,29 +34,47 @@ Installs a web server that listens to github hook events.
 ### app
 #### deploy
 ```
-$ jamesbond app deploy [name]
+$ jamesbond app deploy [githubuser/repo#branch]
 ```
-Deploys an app, if it doesn't exist in the database, the cli will prompt for all the information needed and then clone it from github
+Deploys an app, the cli will prompt for additional information like webhook secret and deployment path if the application is new. If the application was already deployed this tool will do a git pull.
 #### add
 ```
-$ jamesbond app add [name]
+$ jamesbond app add [githubuser/repo#branch]
 ```
 Creates a new app in the database, the cli will prompt for missing information.
 #### get
 ```
-$ jamesbond app get [name]
+$ jamesbond app get [githubuser/repo#branch]
 ```
 prints the content of an app on the local database
+#### delete
+```
+$ jamesbond app delete [githubuser/repo#branch]
+```
+delete an app from the database
 #### list
 ```
 $ jamesbond app list
 ```
 list all apps in the database
-#### delete
+
+## Configuration
+Jamesbond config is using [rc](http://github.com/dominictarr/rc). 
+
+The jamesbond service has the following configuration options, that should reside in .jamesbondrc in predefined locations
 ```
-$ jamesbond app delete [name]
+{
+    "logLevel": "INFO",  
+    "db": "/some/path/",
+    "port": 9001
+}
 ```
-delete an app from the database
+for more details on logging system see (yalla)[https://github.com/kessler/node-yalla]
+
+## Hook events service
+Jamesbond service is a web server that listens to hook events sent from github. The webapp itself is on a separate module:  [jamesbond-hookwebapp](https://github.com/kessler/node-jamesbond-hookwebapp) and is also usable as a standalone web application.
+
+Service functionality is based on [ndm](http://npmjs.org/package/ndm)
 
 ### TODO: 
 * automatically create webhook in github if we have permissions when adding an application
