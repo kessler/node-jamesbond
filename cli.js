@@ -54,19 +54,19 @@ function app() {
 function service() {
 	switch (argv.$.args[0]) {
 		case 'install':
-			var interview = new ndm.Interview({"env": {
-				"HOST": {
-					"default": "localhost",
-					"description": "what host should I bind to?"
-				}
-			}})
+			// var interview = new ndm.Interview({"env": {
+			// 	"HOST": {
+			// 		"default": "localhost",
+			// 		"description": "what host should I bind to?"
+			// 	}
+			// }})
 
-			interview.run(function () {
-				console.log(arguments)
-			})
+			// interview.run(function () {
+			// 	console.log(arguments)
+			// })
 
 			//log.info('db file is at: %s', config.db)
-			//ndm.install()
+			ndm.install()
 			break
 
 		case 'uninstall':
