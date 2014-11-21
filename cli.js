@@ -190,6 +190,7 @@ function deleteApp() {
 }
 
 function deploy() {
+	console.log(argv.$.args[1])
 	db.getApp(argv.$.args[1], function(err, app) {
 		if (err) {
 			return addApp(deploy)
