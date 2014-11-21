@@ -192,7 +192,7 @@ function deleteApp() {
 function deploy() {
 	db.getApp(argv.$.args[1], function(err, app) {
 		if (err) {
-			return addApp(deployApp)
+			return addApp(deploy)
 		}
 
 		deployApp(app, defaultCallback)
