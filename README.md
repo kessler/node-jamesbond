@@ -61,7 +61,7 @@ list all apps in the database
 ## Configuration
 Jamesbond config is using [rc](http://github.com/dominictarr/rc). 
 
-The jamesbond service has the following configuration options, that should reside in .jamesbondrc in predefined locations
+The jamesbond service has the following configuration options, that should reside in .jamesbondrc at the usual locations
 ```
 {
     "logLevel": "INFO",  
@@ -69,7 +69,7 @@ The jamesbond service has the following configuration options, that should resid
     "port": 9001
 }
 ```
-for more details on logging system see (yalla)[https://github.com/kessler/node-yalla]
+for more details on logging system see [yalla](https://github.com/kessler/node-yalla)
 
 ## Hook events service
 Jamesbond service is a web server that listens to hook events sent from github. The webapp itself is on a separate module:  [jamesbond-hookwebapp](https://github.com/kessler/node-jamesbond-hookwebapp) and is also usable as a standalone web application.
