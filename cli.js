@@ -247,9 +247,9 @@ function generateRemoteUrl(app) {
 
 	remoteUrl += app.name
 
-	if (app.protocol === 'ssh') {
-		remoteUrl += '.git'
-	}
+	// if (app.protocol === 'ssh') {
+	// 	remoteUrl += '.git'
+	// }
 
 	return remoteUrl
 }
