@@ -24,6 +24,10 @@ Now install and start the hook service:
 $ jamesbond service install && jamesbond service start
 ```
 
+if ndm does not support your system or is causing trouble, try [pm2](https://github.com/Unitech/PM2):
+```
+pm2 start path/to/bin/jamesbond --output=jamesbond.log -- hookserver start
+```
 ## Command line tool
 
 ### service 

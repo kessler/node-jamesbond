@@ -62,7 +62,7 @@ function app() {
 function hookserver() {
 	switch (argv.$.args[0]) {
 		case 'start':
-			child.spawn('node', [ path.join(__dirname, 'hookserver.js')], { cwd: __dirname, stdio: 'inherit' })			
+			child.spawn('node', [ path.join(__dirname, 'hookserver.js')].concat(process.argv.slice(2)), { cwd: __dirname, stdio: 'inherit' })			
 			break
 		
 		default:
@@ -176,7 +176,7 @@ function updateApp() {
 		prompt.message = ''
 		prompt.delimiter = ''
 
-		prompt.getApp(field + ':', function(err, result) {
+		prompt.get(field + ':', function(err, result) {
 			app[field] = result[field]
 
 			if (field === 'paths') {
