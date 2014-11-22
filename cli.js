@@ -245,11 +245,11 @@ function generateRemoteUrl(app) {
 		throw new Error('invalid procotol ' + app.protocol)
 	}
 
-	remoteUrl += app.name
+	remoteUrl += removeBranch(app.name)
 
-	// if (app.protocol === 'ssh') {
-	// 	remoteUrl += '.git'
-	// }
+	if (app.protocol === 'ssh') {
+		remoteUrl += '.git'
+	}
 
 	return remoteUrl
 }
