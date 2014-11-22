@@ -114,57 +114,55 @@ function service() {
 
 function addApp(cb) {
 
-	var appName = argv.name || argv.$.args[1]
-	var branch
+	db.getApp(argv.$.args[1], function(err, app) {
+		if (app) throw new Error('app exists, use "app update" command instead')
 
-	// try {
-	// 	branch = getBranch(appName)
-	// } catch (e) {
-	// 	log.error('failed to extract branch from %s', appName)
-	// }
+		var appName = argv.name || argv.$.args[1]
+		var branch
 
-	var app = {
-		name: appName,
-		gitRemoteUrl: argv.gitRemoteUrl,
-		paths: argv.paths,
-		branch: argv.branch,
-		secret: argv.secret,
-		// TODO: need to expose this to the user with defaults
-		events: ['push']
-	}
+		try {
+		 	branch = getBranch(appName)
+		} catch (e) {
+		 	log.error('failed to extract branch from %s', appName)
+		}
 
-	var prompts = []
+		var app = {
+			name: appName,
+			protocol: argv.protocol,
+			paths: argv.paths,
+			branch: branch || argv.branch,
+			secret: argv.secret,
+			// TODO: need to expose this to the user with defaults
+			events: ['push']
+		}
 
-	for (var field in app) {
-		if (!app[field])
-			prompts.push(field)
-	}
+		var prompts = []
 
-	// TODO maybe not print the whole app object here (with secret)
-	// some fields are missing so as the user
-	if (prompts.length > 0) {
-		prompt.message = ''
-		prompt.delimiter = ''
-		prompt.colors = false
+		for (var field in app) {
+			if (!app[field])
+				prompts.push(field)
+		}
 
-		prompt.addProperties(app, prompts, function(err, result) {
-			var githubUrlPrefix = app.gitRemoteUrl.indexOf('https://github.com/')
+		// TODO maybe not print the whole app object here (with secret)
+		// some fields are missing so as the user
+		if (prompts.length > 0) {
+			prompt.message = ''
+			prompt.delimiter = ''
+			prompt.colors = false
 
-			if (githubUrlPrefix === -1) {
-				app.gitRemoteUrl =  'https://github.com/' + app.gitRemoteUrl
-			} else if (githubUrlPrefix > 0) {
-				cb(new Error('invalid remote url: ' + app.gitRemoteUrl))
-			}
+			prompt.addProperties(app, prompts, function(err, result) {
+				app.gitRemoteUrl = generateRemoteUrl(app)
 
-			app.paths = app.paths.split(',')
+				app.paths = app.paths.split(',')
+				log.info(JSON.stringify(app))
+
+				db.putApp(app, cb)
+			})
+		} else {
 			log.info(JSON.stringify(app))
-
 			db.putApp(app, cb)
-		})
-	} else {
-		log.info(JSON.stringify(app))
-		db.putApp(app, cb)
-	}
+		}
+	})
 }
 
 function updateApp() {
@@ -234,4 +232,24 @@ function getBranch(appName) {
 
 function removeBranch(appName) {
 	return appName.substr(0, appName.indexOf('#'))
+}
+
+function generateRemoteUrl(app) {
+	var remoteUrl
+
+	if (app.protocol === 'https') {
+		remoteUrl = 'https://github.com/'
+	} else if (app.protocol === 'ssh') {
+		remoteUrl = 'git@github.com:'
+	} else {
+		throw new Error('invalid procotol ' + app.protocol)
+	}
+
+	remoteUrl += app.name
+
+	if (app.protocol === 'ssh') {
+		remoteUrl += '.git'
+	}
+
+	return remoteUrl
 }

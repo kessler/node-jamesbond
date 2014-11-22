@@ -15,7 +15,7 @@ $ npm install -g jamesbond
 ```
 Then to initially deploy do
 ```
-$ jamesbond app deploy [appname]
+$ jamesbond app deploy [githubUser/reponame] (optionally you can add #branch too)
 ```
 this action will add an entry in the database, clone the repository (it will ask you where to) and run npm install
 
@@ -34,22 +34,26 @@ Installs jamesbond service to listens for github hook events.
 ### app
 #### deploy
 ```
-$ jamesbond app deploy [appname]
+$ jamesbond app deploy [githubUser/reponame#branch]
 ```
-Deploys an app, the cli will prompt for additional information like webhook secret and deployment path if the application is new. If the application was already deployed this tool will do a git pull.
+Deploys an app, the cli will prompt for additional information like webhook secret and deployment path if the application is new. If the application was already deployed this tool will do a git pull. 
+The branch part of the key is optional. If you dont specify it, jamesbond will ask for the branch. 
+When getting hook events from github, jamesbond will first load the app by its githubUser/reponame key, if its not found jamesbond will search for githubUser/repo#branch app, doing nothing there isn't an app with this name. When two or more apps exist in the database: githubUser/repo and githubUser/repo#branch, jamesbond will try loading githubUser/repo first, compare branches between the local database and the hook event data from github. If they dont match jamesbond will try to load the second app: githubUser/repo#branch.
+
+This is a little complex, so this behaviour might change in the future to something simpler.
 #### add
 ```
-$ jamesbond app add [appname]
+$ jamesbond app add [githubUser/reponame#branch]
 ```
 Creates a new app in the database, the cli will prompt for missing information.
 #### get
 ```
-$ jamesbond app get [appname]
+$ jamesbond app get [githubUser/reponame#branch]
 ```
 prints the content of an app on the local database
 #### delete
 ```
-$ jamesbond app delete [appname]
+$ jamesbond app delete [githubUser/reponame#branch]
 ```
 delete an app from the database
 #### list
