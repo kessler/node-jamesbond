@@ -127,7 +127,7 @@ function addApp(cb) {
 		prompt.colors = false
 
 		prompt.addProperties(app, prompts, function(err, result) {
-			app.gitRemoteUrl = 'https://github.com/' + app.name
+			app.gitRemoteUrl = 'https://github.com/' + removeBranch(app.name)
 
 			app.paths = app.paths.split(',')
 			log.info(JSON.stringify(app))
@@ -190,7 +190,7 @@ function deleteApp() {
 }
 
 function deploy() {
-	console.log(argv.$.args[1])
+
 	db.getApp(argv.$.args[1], function(err, app) {
 		if (err) {
 			return addApp(deploy)
@@ -207,4 +207,8 @@ function defaultCallback(err) {
 
 function getBranch(appName) {
 	return appName.split('#')[1]
+}
+
+function removeBranch(appName) {
+	return appName.substr(0, appName.indexOf('#'))
 }
