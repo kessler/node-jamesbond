@@ -10,6 +10,8 @@ var prompt = require('prompt')
 var util = require('util')
 var async = require('async')
 var ndm = require('ndm')('jamesbond')
+var child = require('child_process')
+var path = require('path')
 
 var config = require('./lib/config')
 var argv = require('./lib/argv')
@@ -18,12 +20,18 @@ var db = require('./lib/db')
 var deployApp = require('./lib/deployApp')
 
 if (argv.$.command === 'app') {
-	app()
-} else if (argv.$.command === 'service') {
-	service()
-} else {
-	log.error('invalid command: %s', argv.$.command)
+	return app()
 }
+
+if (argv.$.command === 'service') {
+	return service()
+} 
+
+if (argv.$.command === 'hookserver') {
+	return hookserver()
+} 
+
+return log.error('invalid command: %s', argv.$.command)
 
 function app() {
 	switch (argv.$.args[0]) {
@@ -49,6 +57,18 @@ function app() {
 			log.error('invalid app command')
 			break
 	}
+}
+
+function hookserver() {
+	switch (argv.$.args[0]) {
+		case 'start':
+			child.spawn('node', [ path.join(__dirname, 'hookserver.js')], { cwd: __dirname, stdio: 'inherit' })			
+			break
+		
+		default:
+			log.error('invalid hookserver command')
+			break
+	}	
 }
 
 function service() {
