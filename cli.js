@@ -97,16 +97,17 @@ function addApp(cb) {
 	var appName = argv.name || argv.$.args[1]
 	var branch
 
-	try {
-		branch = getBranch(appName)
-	} catch (e) {
-		log.error('failed to extract branch from %s', appName)
-	}
+	// try {
+	// 	branch = getBranch(appName)
+	// } catch (e) {
+	// 	log.error('failed to extract branch from %s', appName)
+	// }
 
 	var app = {
 		name: appName,
+		gitRemoteUrl: argv.gitRemoteUrl,
 		paths: argv.paths,
-		branch: branch || argv.branch,
+		branch: argv.branch,
 		secret: argv.secret,
 		// TODO: need to expose this to the user with defaults
 		events: ['push']
@@ -127,7 +128,13 @@ function addApp(cb) {
 		prompt.colors = false
 
 		prompt.addProperties(app, prompts, function(err, result) {
-			app.gitRemoteUrl = 'https://github.com/' + removeBranch(app.name)
+			var githubUrlPrefix = app.gitRemoteUrl.indexOf('https://github.com/')
+
+			if (githubUrlPrefix === -1) {
+				app.gitRemoteUrl =  'https://github.com/' + app.gitRemoteUrl
+			} else if (githubUrlPrefix > 0) {
+				cb(new Error('invalid remote url: ' + app.gitRemoteUrl))
+			}
 
 			app.paths = app.paths.split(',')
 			log.info(JSON.stringify(app))
@@ -143,10 +150,6 @@ function addApp(cb) {
 function updateApp() {
 
 	var field = argv.$.args[2]
-
-	if (field === 'branch' || field === 'gitRemoteUrl') {
-		return log.error('field %s is read only', field)
-	}
 
 	db.getApp(argv.$.args[1], function(err, app) {
 		if (err) return log.error(err)

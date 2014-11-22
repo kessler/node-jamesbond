@@ -15,7 +15,7 @@ $ npm install -g jamesbond
 ```
 Then to initially deploy do
 ```
-$ jamesbond app deploy githubUser/myRepositoryName#branch
+$ jamesbond app deploy [appname]
 ```
 this action will add an entry in the database, clone the repository (it will ask you where to) and run npm install
 
@@ -34,22 +34,22 @@ Installs jamesbond service to listens for github hook events.
 ### app
 #### deploy
 ```
-$ jamesbond app deploy [githubuser/repo#branch]
+$ jamesbond app deploy [appname]
 ```
 Deploys an app, the cli will prompt for additional information like webhook secret and deployment path if the application is new. If the application was already deployed this tool will do a git pull.
 #### add
 ```
-$ jamesbond app add [githubuser/repo#branch]
+$ jamesbond app add [appname]
 ```
 Creates a new app in the database, the cli will prompt for missing information.
 #### get
 ```
-$ jamesbond app get [githubuser/repo#branch]
+$ jamesbond app get [appname]
 ```
 prints the content of an app on the local database
 #### delete
 ```
-$ jamesbond app delete [githubuser/repo#branch]
+$ jamesbond app delete [appname]
 ```
 delete an app from the database
 #### list
