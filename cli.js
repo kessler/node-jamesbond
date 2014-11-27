@@ -227,11 +227,18 @@ function defaultCallback(err) {
 }
 
 function getBranch(appName) {
-	return appName.split('#')[1]
+	var index = appName.indexOf('#')
+	
+	if (index > -1)
+		return appName.substr(index + 1)
 }
 
 function removeBranch(appName) {
-	return appName.substr(0, appName.indexOf('#'))
+	var index = appName.indexOf('#')
+	if (index > -1)
+		return appName.substr(0, index)
+	
+	return appName
 }
 
 function generateRemoteUrl(app) {
@@ -246,7 +253,7 @@ function generateRemoteUrl(app) {
 	}
 
 	remoteUrl += removeBranch(app.name)
-
+	
 	if (app.protocol === 'ssh') {
 		remoteUrl += '.git'
 	}
