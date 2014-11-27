@@ -12,14 +12,12 @@
   },
   "dependencies": {
     "async": "^0.9.0",
-    "file-index": "^2.0.3",
     "iniparser": "^1.0.5",
     "jamesbond-hookwebapp": "0.0.8",
     "minimist": "^1.1.0",
     "ndm": "^3.6.3",
     "prompt": "^0.2.14",
     "rc": "^0.5.3",
-    "sanitize-filename": "^1.1.1",
     "yalla": "^0.1.0"
   },
   "author": "Yaniv Kessler",

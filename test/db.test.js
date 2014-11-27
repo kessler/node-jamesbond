@@ -9,9 +9,10 @@ var fs = require('fs')
 var rimraf = require('rimraf')
 
 describe('db', function () {
-	
-	var APP = { name: 'test', paths: [] }
-	var ENTRY_FILE = path.join(config.db, 'test.app')
+
+	var APP_NAME = 'kessler/test#master'	
+	var APP = { name: APP_NAME, paths: [] }
+	var ENTRY_FILE = path.join(config.db, APP_NAME.replace('/', '_s') + '.app')
 
 	it('putApp()', function (done) {
 		db.putApp(APP, function(err) {
@@ -30,7 +31,7 @@ describe('db', function () {
 		fs.writeFile(ENTRY_FILE, JSON.stringify(APP), 'utf8', function(err) {
 			if (err) return done(err)
 			
-			db.getApp('test', function(err, app) {
+			db.getApp(APP_NAME, function(err, app) {
 				if (err) return done(err)
 
 				app.should.eql(APP)
@@ -43,7 +44,7 @@ describe('db', function () {
 		fs.writeFile(ENTRY_FILE, JSON.stringify(APP), 'utf8', function(err) {
 			if (err) return done(err)
 
-			db.deleteApp('test', function (err) {
+			db.deleteApp(APP_NAME, function (err) {
 				if (err) return done(err)
 
 				fs.readFile(ENTRY_FILE, function (err) {					
@@ -62,8 +63,8 @@ describe('db', function () {
 				if (err) return done(err)
 
 				var keys = Object.keys(apps)
-				keys.should.eql(['test'])
-				apps.test.should.eql(APP)
+				keys.should.eql([APP_NAME])
+				apps[APP_NAME].should.eql(APP)
 				done()
 			})
 		})
@@ -73,13 +74,13 @@ describe('db', function () {
 		fs.writeFile(ENTRY_FILE, JSON.stringify(APP), 'utf8', function(err) {
 			if (err) return done(err)
 
-			db.addPath('test', '123', function(err) {
+			db.addPath(APP_NAME, '123', function(err) {
 				if (err) return done(err)
 
 				fs.readFile(ENTRY_FILE, 'utf8', function (err, data) {
 					if (err) return done(err)
 
-					JSON.parse(data).should.eql({ name: 'test', paths: [ '123' ]})
+					JSON.parse(data).should.eql({ name: APP_NAME, paths: [ '123' ]})
 					done()
 				})
 			})
